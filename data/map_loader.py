@@ -11,6 +11,7 @@ AbingtonBounds = {
     "west": -75.175
 }
 
+
 def download_graph():
     # Download Abington Road Network
     G = ox.graph_from_place(
@@ -22,14 +23,16 @@ def download_graph():
     G = ox.add_edge_speeds(G)
     G = ox.add_edge_travel_times(G)
 
-    ox.save_graphml(G, MapCachePath) # Save Road Network.
+    ox.save_graphml(G, MapCachePath)  # Save Road Network.
     print(f"Graph Saved at {MapCachePath}")
     return G
+
 
 def load_graph():
     # Load Graph From Cache. If not in Cache, download then load.
     if os.path.exists(MapCachePath):
         return ox.load_graphml(MapCachePath)
     return download_graph()
+
 
 G = load_graph()
