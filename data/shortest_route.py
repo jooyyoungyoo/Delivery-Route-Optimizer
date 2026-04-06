@@ -4,7 +4,7 @@ import sklearn  # Needed as optional dependency for traversing graph properly
 
 
 def route_between_coordinates(G, coord1, coord2, weight="length"):
-    # Fine shortest route between two coordinates within working area.
+    # Find shortest route between two coordinates within working area.
     # Weights: 'length' for shortest distance, 'travel_time' for fastest route
 
     lat1, lon1 = coord1
