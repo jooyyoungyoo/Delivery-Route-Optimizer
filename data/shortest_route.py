@@ -1,5 +1,5 @@
 import networkx as nx
-from coord_verification import validate_coordinate, snap_to_node
+from data.coord_verification import validate_coordinate, snap_to_node
 import sklearn  # Needed as optional dependency for traversing graph properly
 
 

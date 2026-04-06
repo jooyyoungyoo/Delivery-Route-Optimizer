@@ -1,5 +1,5 @@
 import osmnx as ox
-from map_loader import AbingtonBounds
+from data.map_loader import AbingtonBounds
 
 
 def is_in_abington(lat, lon):
