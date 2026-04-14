@@ -10,6 +10,89 @@ ABINGTON_BOUNDS = {
     "west": -75.175,
 }
 
+# Example warehouse and locations for instant use
+SAMPLE_WAREHOUSE = {
+    "Type": "Warehouse",
+    "Name": "Abington Main Warehouse",
+    "Latitude": 40.1165,
+    "Longitude": -75.1150,
+}
+
+SAMPLE_LOCATIONS = [
+    {
+        "Type": "Delivery",
+        "Name": "Customer A",
+        "Latitude": 40.1200,
+        "Longitude": -75.1100,
+        "Priority": 3,
+        "Value": 1.0,
+        "Notes": "Sample stop",
+    },
+    {
+        "Type": "Delivery",
+        "Name": "Customer B",
+        "Latitude": 40.1180,
+        "Longitude": -75.1200,
+        "Priority": 2,
+        "Value": 1.0,
+        "Notes": "Sample stop",
+    },
+    {
+        "Type": "Delivery",
+        "Name": "Customer C",
+        "Latitude": 40.1140,
+        "Longitude": -75.1050,
+        "Priority": 4,
+        "Value": 1.0,
+        "Notes": "Sample stop",
+    },
+    {
+        "Type": "Pickup",
+        "Name": "Supplier D",
+        "Latitude": 40.1125,
+        "Longitude": -75.1180,
+        "Priority": 1,
+        "Value": 2.0,
+        "Notes": "Sample pickup",
+    },
+    {
+        "Type": "Delivery",
+        "Name": "Customer E",
+        "Latitude": 40.1175,
+        "Longitude": -75.1120,
+        "Priority": 5,
+        "Value": 1.0,
+        "Notes": "Sample stop",
+    },
+    {
+        "Type": "Other",
+        "Name": "Checkpoint F",
+        "Latitude": 40.1155,
+        "Longitude": -75.1085,
+        "Priority": 3,
+        "Value": 1.0,
+        "Notes": "Sample checkpoint",
+    },
+]
+
+
+def get_sample_warehouse():
+    return SAMPLE_WAREHOUSE.copy()
+
+
+def get_sample_locations():
+    return [location.copy() for location in SAMPLE_LOCATIONS]
+
+
+def load_sample_data():
+    st.session_state.warehouse = get_sample_warehouse()
+    st.session_state.locations = get_sample_locations()
+
+
+def clear_all_data():
+    st.session_state.warehouse = None
+    st.session_state.locations = []
+
 
 def in_bounds(lat: float, lon: float) -> bool:
     return (
@@ -33,10 +116,10 @@ st.set_page_config(
 )
 
 if "warehouse" not in st.session_state:
-    st.session_state.warehouse = None
+    st.session_state.warehouse = get_sample_warehouse()
 
 if "locations" not in st.session_state:
-    st.session_state.locations = []
+    st.session_state.locations = get_sample_locations()
 
 
 def locations_df() -> pd.DataFrame:
@@ -62,25 +145,40 @@ with st.sidebar:
     st.write(f"Warehouse set: {'Yes' if st.session_state.warehouse else 'No'}")
     st.write(f"Saved stops: {len(st.session_state.locations)}")
 
+    st.header("Quick Actions")
+    if st.button("Load Example Data", use_container_width=True):
+        load_sample_data()
+        st.success("Example data loaded.")
+
+    if st.button("Clear All Data", use_container_width=True):
+        clear_all_data()
+        st.success("All data cleared.")
+
 tab1, tab2, tab3 = st.tabs(["Warehouse", "Stops", "Saved Data"])
 
 with tab1:
     st.subheader("Set Warehouse / Start Location")
 
     with st.form("warehouse_form"):
-        wh_name = st.text_input("Warehouse Name", value="Main Start Point")
+        default_wh = st.session_state.warehouse or {
+            "Name": "Main Start Point",
+            "Latitude": 40.1165,
+            "Longitude": -75.1150,
+        }
+
+        wh_name = st.text_input("Warehouse Name", value=default_wh["Name"])
         wh_lat = st.number_input(
             "Warehouse Latitude",
             min_value=float(ABINGTON_BOUNDS["south"]),
             max_value=float(ABINGTON_BOUNDS["north"]),
-            value=40.1165,
+            value=float(default_wh["Latitude"]),
             format="%.6f",
         )
         wh_lon = st.number_input(
             "Warehouse Longitude",
             min_value=float(ABINGTON_BOUNDS["west"]),
             max_value=float(ABINGTON_BOUNDS["east"]),
-            value=-75.1150,
+            value=float(default_wh["Longitude"]),
             format="%.6f",
         )
         save_warehouse = st.form_submit_button("Save Warehouse")
@@ -156,7 +254,7 @@ with tab2:
                 st.warning("No stops to remove.")
 
     with col2:
-        if st.button("Clear All Stops", use_container_width=True):
+        if st.button("Clear Stops Only", use_container_width=True):
             st.session_state.locations = []
             st.success("All stops cleared.")
 
