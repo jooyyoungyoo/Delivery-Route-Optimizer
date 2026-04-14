@@ -73,5 +73,6 @@ destinations = [
 
 # Example usage:
 result = greedy_delivery_route(G, start_coord, destinations)
-print(result["visit_order"])
-print(result["total_distance_km"])
+print(f"Visit order: {result['visit_order']}")
+print(f"Total distance: {result['total_distance_km']} km")
+print(f"Total time: {result['total_time_minutes']} minutes")
