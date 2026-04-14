@@ -29,7 +29,6 @@ def validate_point(lat: float, lon: float, label: str = "Location") -> None:
 
 st.set_page_config(
     page_title="Delivery Route Menu",
-    page_icon="📍",
     layout="wide",
 )
 
