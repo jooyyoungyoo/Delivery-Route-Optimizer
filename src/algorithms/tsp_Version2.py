@@ -1,7 +1,7 @@
 import itertools
 import math
 from data.shortest_route import route_between_coordinates
-from data.coord_verification import validate_coordinate, snap_to_node
+from data.coord_verification import validate_coordinate
 
 
 def euclidean_distance(coord1, coord2):
